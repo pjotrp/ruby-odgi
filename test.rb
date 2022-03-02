@@ -8,11 +8,6 @@ module MyLib
   attach_function :puts, [ :string ], :int
 end
 
-module HG
-  extend FFI::Library
-  ffi_lib 'handlegraph'
-end
-
 module ODGI
   extend FFI::Library
   ffi_lib 'odgi'

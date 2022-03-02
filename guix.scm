@@ -16,6 +16,8 @@
 ;;   make install
 ;;   cd ..
 ;;   ruby test.rb
+;;
+;; env LD_LIBRARY_PATH=$GUIX_ENVIRONMENT/lib:./handlegraph-prefix/lib:/odgi/lib LD_PRELOAD=libjemalloc.so.2 ruby ../test.rb
 
 (use-modules
   (ice-9 popen)
@@ -73,8 +75,8 @@
        ("python" ,python)
        ("ruby" ,ruby)
        ("ruby-ffi" ,ruby-ffi)
-       ("sdsl-lite" ,sdsl-lite)
-       ("libdivsufsort" ,libdivsufsort)
+       ; ("sdsl-lite" ,sdsl-lite)
+       ; ("libdivsufsort" ,libdivsufsort)
        ))
     (native-inputs
      `(("pkg-config" ,pkg-config)
