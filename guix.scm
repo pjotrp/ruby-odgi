@@ -4,36 +4,18 @@
 ;;
 ;; To get a development container (emacs shell will work)
 ;;
-;;   guix shell -C -D -f guix.scm
+;;   guix shell -C -D -f guix.scm --expose=../odgi=/odgi
 ;;
-;; and build
+;; Because of cmake out-of-tree builds we can do:
 ;;
-;;   find -name CMakeCache.txt|xargs rm -v
+;;   guix shell -C -D -f guix.scm --share=../odgi=/odgi -c 1 -M 1
+;;   mkdir -p build
 ;;   cd build
-;;   cmake -DCMAKE_BUILD_TYPE=Debug ..
-;;   cmake --build . --verbose
-;;
-;; For the tests you may need /usr/bin/env. In a container create it with
-;;
-;;   mkdir -p /usr/bin ; ln -s $GUIX_ENVIRONMENT/bin/env /usr/bin/env
-;;
-;; Note for python bindings you may need to run against gcc-11 with something
-;; like
-;;
-;;   env LD_LIBRARY_PATH=/gnu/store/*gcc-11*lib/lib PYTHONPATH=lib python3 examples/explore.py
-;;
-;; otherwise you get ImportError:
-;;
-;; /gnu/store/90lbavffg0csrf208nw0ayj1bz5knl47-gcc-10.3.0-lib/lib/libstdc++.so.6:
-;; version `GLIBCXX_3.4.29' not found because it tries to pick up from gcc-10.
-;;
-;; In debug mode with AddressSanitizer you may need to preload libasan.so:
-;;   env LD_PRELOAD=/gnu/store/8ya5i2ll3by937rlm7nv7d78730n837d-gcc-11.2.0-lib/lib/libasan.so etc.
-;;
-;; Python may show memory leaks, see https://bugs.python.org/issue43303
-
-;  #:use-module (guix utils)
-
+;;   cmake -DCMAKE_BUILD_TYPE=Debug /odgi
+;;   make
+;;   make install
+;;   cd ..
+;;   ruby test.rb
 
 (use-modules
   (ice-9 popen)
@@ -51,6 +33,7 @@
   (gnu packages build-tools)
   (gnu packages commencement) ; gcc-toolchain
   (gnu packages curl)
+  (gnu packages datastructures)
   (gnu packages gdb)
   (gnu packages gcc)
   (gnu packages jemalloc)
@@ -82,14 +65,16 @@
        ; ("intervaltree" ,intervaltree) later!
        ("jemalloc" ,jemalloc)
        ("gcc" ,gcc-11)
+       ("gcc-lib" ,gcc-11 "lib")
        ("gcc-toolchain" ,gcc-toolchain)
        ("gdb" ,gdb)
        ("git" ,git)
        ; ("lodepng" ,lodepng) later!
        ("python" ,python)
-       ; ("sdsl-lite" ,sdsl-lite) later!
        ("ruby" ,ruby)
        ("ruby-ffi" ,ruby-ffi)
+       ("sdsl-lite" ,sdsl-lite)
+       ("libdivsufsort" ,libdivsufsort)
        ))
     (native-inputs
      `(("pkg-config" ,pkg-config)
