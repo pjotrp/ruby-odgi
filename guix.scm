@@ -11,13 +11,18 @@
 ;;   guix shell -C -D -f guix.scm --share=../odgi=/odgi -c 1 -M 1
 ;;   mkdir -p build
 ;;   cd build
-;;   cmake -DCMAKE_BUILD_TYPE=Debug /odgi
+;;   cmake -DCMAKE_BUILD_TYPE=Debug -DINLINE_HANDLEGRAPH_SOURCES=ON /odgi
 ;;   make
 ;;   make install
 ;;   cd ..
 ;;   ruby test.rb
 ;;
-;; env LD_LIBRARY_PATH=$GUIX_ENVIRONMENT/lib:./handlegraph-prefix/lib:/odgi/lib LD_PRELOAD=libjemalloc.so.2 ruby ../test.rb
+;; env LD_LIBRARY_PATH=$GUIX_ENVIRONMENT/lib:/odgi/lib:./libbf-prefix/lib/ LD_PRELOAD=libjemalloc.so.2:libsdsl.so:libbf.so ruby ../test.rb
+;;
+;; renders
+;;
+;; Hello, World using libc!
+;; "ODGI version: 2e1cd30"
 
 (use-modules
   (ice-9 popen)
@@ -40,6 +45,7 @@
   (gnu packages gcc)
   (gnu packages jemalloc)
   (gnu packages libffi)
+  (gnu packages mpi)
   (gnu packages python)
   (gnu packages python-xyz)
   (gnu packages pkg-config)
@@ -72,11 +78,12 @@
        ("gdb" ,gdb)
        ("git" ,git)
        ; ("lodepng" ,lodepng) later!
+       ("openmpi" ,openmpi)
        ("python" ,python)
        ("ruby" ,ruby)
        ("ruby-ffi" ,ruby-ffi)
-       ; ("sdsl-lite" ,sdsl-lite)
-       ; ("libdivsufsort" ,libdivsufsort)
+       ("sdsl-lite" ,sdsl-lite)
+       ("libdivsufsort" ,libdivsufsort)
        ))
     (native-inputs
      `(("pkg-config" ,pkg-config)

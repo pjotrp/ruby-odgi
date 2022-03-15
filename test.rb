@@ -2,19 +2,21 @@
 
 require 'ffi'
 
-module MyLib
-  extend FFI::Library
-  ffi_lib 'c'
-  attach_function :puts, [ :string ], :int
-end
-
 module ODGI
   extend FFI::Library
   ffi_lib 'odgi'
-  attach_function :odgi_version, [], :string
-  attach_function :odgi_graph_nodes, [], :int
+  attach_function :load, :odgi_load_graph, [:string], :pointer
+  attach_function :free, :odgi_free_graph, [:pointer], :int
+  attach_function :version, :odgi_version, [], :string
+  attach_function :count_nodes, :odgi_get_node_count, [:pointer], :int
+  attach_function :count_paths, :odgi_get_path_count, [:pointer], :int
 end
 
-MyLib.puts 'Hello, World using libc!'
+fn = ARGV.shift
 
-p "ODGI version: #{ODGI.odgi_version}"
+print("Loading #{fn} with ODGI version #{ODGI.version}...\n")
+
+pangenome = ODGI.load(fn)
+print("#{ODGI.count_paths(pangenome)} paths\n")
+print("#{ODGI.count_nodes(pangenome)} nodes\n")
+ODGI.free(pangenome) # cleanup
