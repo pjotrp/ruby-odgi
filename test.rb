@@ -15,6 +15,9 @@ module ODGI
   attach_function :min_node_id, :odgi_min_node_id, [:pointer], :int
   attach_function :count_nodes, :odgi_get_node_count, [:pointer], :int
   attach_function :count_paths, :odgi_get_path_count, [:pointer], :int
+  callback :next_handle, [:long], :bool
+  attach_function :each_handle, :odgi_for_each_handle, [:pointer, :next_handle], :bool
+  attach_function :get_sequence, :odgi_get_sequence, [:pointer,:long], :string
   callback :next_path, [:long], :void
   attach_function :each_path, :odgi_for_each_path_handle, [:pointer, :next_path], :void
   attach_function :path_name, :odgi_get_path_name, [:pointer, :long], :string
@@ -39,5 +42,9 @@ raise "No path[5]" if not ODGI.has_path(pangenome,path_name5)
 
 path5 = ODGI::get_path(pangenome,path_name5);
 p [path5,ODGI.path_name(pangenome,path5)]
+
+ODGI.each_handle(pangenome) { |handle|
+  p [handle,ODGI::get_sequence(pangenome,handle)]
+}
 
 ODGI.free(pangenome) # cleanup
