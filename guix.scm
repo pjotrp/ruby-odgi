@@ -12,7 +12,7 @@
 ;;   mkdir -p build
 ;;   cd build
 ;;   cmake -DCMAKE_BUILD_TYPE=Debug -DINLINE_HANDLEGRAPH_SOURCES=ON /odgi
-;;   make
+;;   make libodgi_shared
 ;;   make install
 ;;   cd ..
 ;;   ruby test.rb
